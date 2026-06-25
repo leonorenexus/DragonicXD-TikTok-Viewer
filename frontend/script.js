@@ -151,6 +151,65 @@ function setupAutoplay() {
     videos.forEach(video => observer.observe(video));
 }
 
+// ============ STORAGE DETAIL ============
+async function showStorageDetail() {
+    try {
+        const response = await fetch(`${API_BASE}/api/storage/detail`);
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(
+                `📁 Storage Info:\n\n` +
+                `📍 Path: ${data.path}\n` +
+                `📦 Total Files: ${data.total_files}\n` +
+                `💾 Total Size: ${data.formatted}\n` +
+                `📊 Status: ${data.total_files > 0 ? '✅ Ada video' : '🫙 Kosong'}`
+            );
+        }
+    } catch (error) {
+        console.error('Gagal load storage detail:', error);
+    }
+}
+
+// ============ CLEAR STORAGE ============
+async function clearStorage() {
+    if (!confirm('⚠️ Yakin mau hapus SEMUA video dari storage?\nIni permanen!')) return;
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/storage/clear`, {
+            method: 'DELETE'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(`✅ ${data.message}`);
+            await loadFeed();
+        } else {
+            alert(`❌ ${data.error}`);
+        }
+    } catch (error) {
+        console.error('Gagal clear storage:', error);
+    }
+}
+
+// ============ CHECK DISK SPACE ============
+async function checkDiskSpace() {
+    try {
+        const response = await fetch(`${API_BASE}/api/storage/disk`);
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(
+                `💾 Disk Space Info:\n\n` +
+                `🆓 Free Space: ${data.formatted}\n` +
+                `${data.warning}`
+            );
+        }
+    } catch (error) {
+        console.error('Gagal cek disk:', error);
+    }
+}
+
 // ============ DOWNLOAD VIDEO ============
 async function downloadVideo(url) {
     statusMsg.className = 'status-message loading';
