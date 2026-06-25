@@ -1,0 +1,59 @@
+name: Deploy DragonicXD
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        cd backend
+        pip install -r requirements.txt
+    
+    - name: Create data directory
+      run: mkdir -p data/videos
+    
+    - name: Run server (background)
+      run: |
+        cd backend
+        python app.py &
+      continue-on-error: true
+    
+    - name: Test server
+      run: |
+        sleep 5
+        curl -f http://localhost:5000/api/feed || exit 1
+    
+    - name: Deploy to GitHub Pages (Frontend)
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./frontend
+        destination_dir: ./public
+    
+    - name: Create Release APK (Paket Web)
+      run: |
+        mkdir -p dist
+        cp -r frontend/* dist/
+        cp backend/requirements.txt dist/
+        echo "DragonicXD Offline TikTok Viewer" > dist/README.txt
+        zip -r DragonicXD-WebApp.zip dist/
+    
+    - name: Upload Release Asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: DragonicXD-WebApp
+        path: DragonicXD-WebApp.zip
