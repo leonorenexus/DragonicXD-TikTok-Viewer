@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🐉 DragonicXD - TikTok Offline</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Floating Download Button -->
+    <button id="floatingBtn" class="floating-btn">
+        <span>+</span>
+    </button>
+
+    <!-- Download Modal -->
+    <div id="downloadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📥 Download Video</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="urlInput" placeholder="Masukkan URL TikTok..." class="url-input">
+                <button id="downloadBtn" class="download-btn">🔥 Download</button>
+                <div id="downloadStatus" class="status-message"></div>
+                <div class="tips">
+                    <small>💡 Support URL: tiktok.com/@user/video/xxx</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Feed Container -->
+    <div id="feedContainer" class="feed-container">
+        <div class="feed-loading">
+            <div class="loader"></div>
+            <p>Memuat video...</p>
+        </div>
+    </div>
+
+    <!-- Video Player Template (hidden) -->
+    <div id="videoTemplate" style="display:none;">
+        <div class="video-wrapper">
+            <video src="" preload="metadata" playsinline></video>
+            <div class="video-controls">
+                <button class="mute-btn">🔊</button>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="video-title"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Info -->
+    <div id="bottomInfo" class="bottom-info">
+        <span id="videoCount">0 video</span>
+        <span id="storageInfo">0 MB</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
