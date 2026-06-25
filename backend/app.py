@@ -167,7 +167,46 @@ def search_videos():
         'videos': videos,
         'total': len(videos)
     })
+from storage import StorageManager
 
+# Inisialisasi Storage Manager
+storage = StorageManager()
+
+# ============= API STORAGE INFO =============
+@app.route('/api/storage/detail', methods=['GET'])
+def get_storage_detail():
+    info = storage.get_storage_info()
+    if 'error' in info:
+        return jsonify({'error': info['error']}), 500
+    return jsonify(info)
+
+# ============= API CLEAR STORAGE =============
+@app.route('/api/storage/clear', methods=['DELETE'])
+def clear_storage():
+    result = storage.clear_storage()
+    if 'error' in result:
+        return jsonify({'error': result['error']}), 500
+    return jsonify(result)
+
+# ============= API DISK SPACE =============
+@app.route('/api/storage/disk', methods=['GET'])
+def check_disk():
+    result = storage.check_disk_space()
+    if 'error' in result:
+        return jsonify({'error': result['error']}), 500
+    return jsonify(result)
+
+# ============= API VIDEO FILES LIST =============
+@app.route('/api/storage/files', methods=['GET'])
+def get_storage_files():
+    files = storage.get_video_list()
+    if 'error' in files:
+        return jsonify({'error': files['error']}), 500
+    return jsonify({
+        'success': True,
+        'files': files,
+        'total': len(files)
+    })
 # ============= RUN SERVER =============
 if __name__ == '__main__':
     print('''
